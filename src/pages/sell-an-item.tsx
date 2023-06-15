@@ -2,19 +2,20 @@
 import { type NextPage } from "next";
 import Head from "next/head";
 import { useForm, type SubmitHandler } from "react-hook-form";
+import { api } from "~/utils/api";
 type Inputs = {
   name: string;
   description: string;
-  price: string;
+  price: number;
 };
 const Sell: NextPage = () => {
+  const createListing = api.listings.create.useMutation();
   const {
     register,
     handleSubmit,
-    watch,
     formState: { errors },
   } = useForm<Inputs>();
-  const onSubmit: SubmitHandler<Inputs> = (data) => console.log(data);
+  const onSubmit: SubmitHandler<Inputs> = (formData) => createListing.mutateAsync(formData);
   return (
     <>
       <Head>
@@ -33,6 +34,7 @@ const Sell: NextPage = () => {
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               {...register("name", { required: true })}
             />
+            {errors.name && <span>This field is required</span>}
           </div>
           <div>
             <label htmlFor="description" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
@@ -43,6 +45,7 @@ const Sell: NextPage = () => {
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               {...register("description", { required: true })}
             />
+            {errors.description && <span>This field is required</span>}
           </div>
           <div>
             <label htmlFor="description" className="mb-2 block text-sm font-medium text-gray-900 dark:text-white">
@@ -55,12 +58,11 @@ const Sell: NextPage = () => {
               className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-2.5 text-sm text-gray-900 focus:border-blue-500 focus:ring-blue-500 dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400 dark:focus:border-blue-500 dark:focus:ring-blue-500"
               {...register("price", { required: true })}
             />
+            {errors.price && <span>This field is required</span>}
           </div>
 
-          {errors.name && <span>This field is required</span>}
-
           <button
-            type="button"
+            type="submit"
             className="mb-2 mr-2 rounded-lg bg-gradient-to-r from-blue-500 via-blue-600 to-blue-700 px-5 py-2.5 text-center text-sm font-medium text-white hover:bg-gradient-to-br focus:outline-none focus:ring-4 focus:ring-blue-300 dark:focus:ring-blue-800"
           >
             Submit
